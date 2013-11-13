@@ -65,34 +65,34 @@ class Thumbnail extends Object {
 	/**
 	 * New options used for rendering.
 	 */
-	protected $tag_properties = array(); // stored array of additional key=>value pairs for our <img/> tag
-	protected $is_responsive  = true; // used to disable output of height/width properties. if unset on the constructor, will default to AL_THUMBNAIL_IMG_TAG_RESPONSIVE define
-	protected $element_path   = 'html/img'; // the element partial that will be used to render a given thumbnail
+	protected $_tag_properties = array(); // stored array of additional key=>value pairs for our <img/> tag
+	protected $_is_responsive  = true; // used to disable output of height/width properties. if unset on the constructor, will default to AL_THUMBNAIL_IMG_TAG_RESPONSIVE define
+	protected $_element_path   = 'html/img'; // the element partial that will be used to render a given thumbnail
 
 	/**
 	 * Our array of gettable/settable properties
 	 */
-	public $valid_properties = array('src', 'alt', 'file', 'width', 'height', 'crop');
+	protected $_valid_properties = array('src', 'alt', 'file', 'width', 'height', 'crop');
 
 	/**
 	 * Used to get/set our allowed properties
 	 * Verification steps are as follows:
 	 * - string begins with "set" or "get" per isValidType()
 	 * - remainder is converted to a handle (setWidth => width) and validated 
-	 *   against our $valid_properties array per isValidProperty()
+	 *   against our $_valid_properties array per isValidProperty()
 	 * - if both check out, we run the internal get/set method
 	 * - always return for chainability
 	 */
 	public function __call($method, $args) {
 		$type = substr($method, 0, 3);
 		$property = Loader::helper('text')->uncamelcase(substr($method, 3));
-		if ($this->isValidType($type) && $this->isValidProperty($property)) {
+		if ($this->_isValidType($type) && $this->_isValidProperty($property)) {
 			switch($type) {
 				case 'get':
-					return $this->get($property);
+					return $this->_get($property);
 					break;
 				case 'set':
-					return $this->set($property, $args[0]);
+					return $this->_set($property, $args[0]);
 					break;
 			}
 		}
@@ -197,10 +197,11 @@ class Thumbnail extends Object {
 	 * @param  [string] $property
 	 * @return [mixed]
 	 */
-	protected function get($property) {
-		if (in_array($property, $this->valid_properties)) {
+	protected function _get($property) {
+		if (in_array($property, $this->_valid_properties)) {
 			return $this->{$property};
 		}
+		return null;
 	}
 
 	/**
@@ -208,8 +209,8 @@ class Thumbnail extends Object {
 	 * @param  [string] $property
 	 * @return [object] for chaining
 	 */
-	protected function set($property, $value) {
-		if (in_array($property, $this->valid_properties)) {
+	protected function _set($property, $value) {
+		if (in_array($property, $this->_valid_properties)) {
 			$this->{$property} = $value;
 		}
 		return $this;
@@ -233,11 +234,11 @@ class Thumbnail extends Object {
 	 * This can be used to override the partial used to render the <img/> tag
 	 * - NOTE: Not included in magic method simply to be more verbose about this capability
 	 * @example $thumb->setElementPath('html/img_srcset');
-	 * @param [string] $element_path
+	 * @param [string] $_element_path
 	 * @return [object] Thumbnail
 	 */
 	public function setElementPath($element_path) {
-		$this->element_path = $element_path;
+		$this->_element_path = $element_path;
 		return $this;
 	}
 
@@ -246,16 +247,16 @@ class Thumbnail extends Object {
 	 * @return [string]
 	 */
 	public function getElementPath() {
-		return $this->element_path;
+		return $this->_element_path;
 	}
 
 	/**
 	 * Sets the responsive status of our thumbnail (disables height/width attributes)
-	 * @param Boolean $is_responsive
+	 * @param Boolean $_is_responsive
 	 * @return [object] Thumbnail
 	 */
 	public function setResponsive(Boolean $is_responsive) {
-		$this->is_responsive = $is_responsive;
+		$this->_is_responsive = $is_responsive;
 		return $this;
 	}
 
@@ -264,7 +265,7 @@ class Thumbnail extends Object {
 	 * @return boolean
 	 */
 	public function isResponsive() {
-		return $this->is_responsive;
+		return $this->_is_responsive;
 	}
 
 	/**
@@ -274,7 +275,7 @@ class Thumbnail extends Object {
 	 * @return [object] Thumbnail
 	 */
 	public function setTagProperty($property, $value) {
-		$this->tag_properties[$property] = $value;
+		$this->_tag_properties[$property] = $value;
 		return $this;
 	}
 
@@ -283,14 +284,14 @@ class Thumbnail extends Object {
 	 * @return [mixed]
 	 */
 	public function getTagProperty($property) {
-		return (isset($this->tag_properties[$property])) ? $this->tag_properties[$property] : false;
+		return (isset($this->_tag_properties[$property])) ? $this->_tag_properties[$property] : false;
 	}
 
 	/**
 	 * This is used to generate our properties for output with the Element render
 	 * @return [array] $properties
 	 */
-	protected function getAllProperties() {
+	protected function _getAllProperties() {
 		// set our base required properties
 		$properties = array(
 			'src' => $this->getSrc(),
@@ -302,8 +303,8 @@ class Thumbnail extends Object {
 			$properties['height'] = $this->getHeight();
 		}
 		// if we have any custom properties set to the image tag, merge that in as well
-		if (count($this->tag_properties)) {
-			$properties = array_merge(array('properties' => $this->getEncodedTagProperties()), $properties);
+		if (count($this->_tag_properties)) {
+			$properties = array_merge(array('properties' => $this->_getEncodedTagProperties()), $properties);
 		}
 		return $properties;
 	}
@@ -313,7 +314,7 @@ class Thumbnail extends Object {
 	 * @param  [string]  $type
 	 * @return boolean
 	 */
-	protected function isValidType($type) {
+	protected function _isValidType($type) {
 		return ($type == 'set' || $type == 'get');
 	}
 
@@ -322,17 +323,17 @@ class Thumbnail extends Object {
 	 * @param  [string]  $property
 	 * @return boolean
 	 */
-	protected function isValidProperty($property) {
-		return (in_array($property, $this->valid_properties));
+	protected function _isValidProperty($property) {
+		return (in_array($property, $this->_valid_properties));
 	}
 
 	/**
 	 * This sanitizes the tag properties that have been set for the tag by JSON encoding non-string types
 	 * @return [array]
 	 */
-	protected function getEncodedTagProperties() {
+	protected function _getEncodedTagProperties() {
 		$encoded_properties = array();
-		foreach ($this->tag_properties as $property => $value) {
+		foreach ($this->_tag_properties as $property => $value) {
 			if (is_object($value) || is_array($value)) {
 				$value = Loader::helper('json')->encode($value);
 			} else {
