@@ -5,7 +5,7 @@ An enhanced image helper class override for concrete5 that provides more modern 
 
 # Installation
 - Copy `image.php` into your `SITE_ROOT/helpers/` folder.
-- Optionally, copy the included HTML image element into `/elements/html/img.php`. This file is ultimately optional, but is required to enable some of our more advanced methods, such as custom tag properties.
+- Optionally, copy the included HTML image element into `SITE_ROOT/elements/html/img.php`. This file is ultimately optional, but is required to enable some of our more advanced methods, such as custom tag properties.
 
 # Features
 - Robust API for controlling output
