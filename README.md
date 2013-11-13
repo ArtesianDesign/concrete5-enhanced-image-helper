@@ -12,7 +12,7 @@ An enhanced image helper class override for concrete5 that provides more modern 
 - Abstracted view layer
 
 # Usage
-As this was meant to be a drop-in replacement for the existing image helper, you don't have to do anything different one this is installed. You can, however, use the helper with a more object-oriented approach.
+As this was meant to be a drop-in replacement for the existing image helper, you don't have to do anything different once this is installed. You can, however, use the helper with a more object-oriented approach.
 
 ### Instantiating a Thumbnail object
 ```
