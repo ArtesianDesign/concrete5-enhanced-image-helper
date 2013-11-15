@@ -1,7 +1,7 @@
 concrete5-enhanced-image-helper
 ===============================
 
-An enhanced image helper class override for concrete5 that provides more modern object-oriented methods and output control.
+An enhanced image helper class override for concrete5 that provides more modern object-oriented methods and output control. The inspiration for this borne for the desire to provide a way to abstract the `<img/>` rendering into a view, as a responsive image solution is currently on the horizon.
 
 # Installation
 - Copy `image.php` into your `SITE_ROOT/helpers/` folder.
